@@ -13,6 +13,7 @@
     "dotenv": "^14.3.2",
     "email-validator": "^2.0.4",
     "express": "^4.17.2",
+    "fs": "^0.0.1-security",
     "helmet": "^5.0.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.8",
