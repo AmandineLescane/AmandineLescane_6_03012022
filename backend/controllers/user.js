@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 exports.signup = (req, res, next) => {
+    //const emailCrypt = cryptojs.SHA256(req.body.email, `${process.env.CRYPTOJS_SECRET_TOKEN}`).toString();
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
         const user = new User({
@@ -19,6 +20,7 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+    //const emailCrypt = cryptojs.SHA256(req.body.email, 'process.env.CRYPTOJS_SECRET_TOKEN').toString();
     User.findOne({ email : req.body.email })
         .then(user => {
             if(!user) {
@@ -33,7 +35,7 @@ exports.login = (req, res, next) => {
                         userId : user._id,
                         token: jwt.sign(
                             { userId: user._id },
-                            'RANDOM_TOKEN_SECRET',
+                            process.env.CRYPTOJS_SECRET_TOKEN,
                             { expiresIn: '24h' }
                         )
                     });
