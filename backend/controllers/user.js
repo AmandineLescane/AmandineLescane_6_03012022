@@ -5,7 +5,7 @@ const cryptojs = require('crypto-js');
 require('dotenv').config();
 
 exports.signup = (req, res, next) => {
-    const emailCrypt = cryptojs.SHA256(req.body.email, `${process.env.CRYPTOJS_SECRET_TOKEN}`).toString();
+    const emailCrypt = cryptojs.SHA256(req.body.email, process.env.CRYPTOJS_SECRET_TOKEN).toString();
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
         const user = new User({
@@ -13,14 +13,14 @@ exports.signup = (req, res, next) => {
             password: hash
         });
         user.save()
-            .then(res.status(201).json({message : "Utilisateur créé !"}))
-            .catch(error => res.status(400).json({ error }))
+            .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+            .catch((error) => res.status(400).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
 };
 
 exports.login = (req, res, next) => {
-    const emailCrypt = cryptojs.SHA256(req.body.email, `${process.env.CRYPTOJS_SECRET_TOKEN}`).toString();
+    const emailCrypt = cryptojs.SHA256(req.body.email, process.env.CRYPTOJS_SECRET_TOKEN).toString();
     User.findOne({ email : emailCrypt })
         .then((user) => {
             if(!user) {
@@ -37,7 +37,7 @@ exports.login = (req, res, next) => {
                         userId : user._id,
                         token: jwt.sign(
                             { userId: user._id },
-                            `${process.env.CRYPTOJS_SECRET_TOKEN}`,
+                            process.env.CRYPTOJS_SECRET_TOKEN,
                             { expiresIn: '24h' }
                             )
                     });
